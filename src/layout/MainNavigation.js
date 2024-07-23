@@ -1,8 +1,10 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Form, NavLink, useRouteLoaderData } from 'react-router-dom';
 import styles from './MainNavigation.module.scss';
 
 const MainNavigation = () => {
+
+  const userData = useRouteLoaderData('user-data');
 
   const activeFn = ({ isActive }) => {
     // NavLink 컴포넌트에 className프롭스에 함수를 전달하면
@@ -21,6 +23,13 @@ const MainNavigation = () => {
           <li>
             <NavLink to='events' className={activeFn}>Events</NavLink>
           </li>
+          {userData && <li>
+            <Form action='/logout' method='POST'>
+
+            <button style={{width: '100%'}} >logout</button>
+            </Form>
+
+          </li>}
         </ul>
       </nav>
     </header>

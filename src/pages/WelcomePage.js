@@ -1,10 +1,19 @@
-import React from 'react'
-import LoginForm from '../components/auth/LoginForm'
+import React, { useEffect, useState } from 'react';
+import LoginForm from '../components/auth/LoginForm';
+import Main from '../components/Main';
+import { useRouteLoaderData } from 'react-router-dom';
 
 const WelcomePage = () => {
-  return (
-    <LoginForm />
-  )
-}
+    const userData = useRouteLoaderData('user-data');
 
-export default WelcomePage
+  
+
+  return (
+    <>
+      {!userData && <LoginForm />}
+      {userData && <Main />}
+    </>
+  );
+};
+
+export default WelcomePage;

@@ -15,6 +15,11 @@ import EditPage from "../pages/EditPage";
 import { action as manipulateAction } from "../components/EventForm";
 import WelcomePage from "../pages/WelcomePage";
 import SignUpPage from "../pages/SignUpPage";
+import { loginAction } from "../components/auth/LoginForm";
+import { authCheckLoader, userDataLoader } from "./auth";
+import { logoutAction } from "../pages/Logout";
+import EventProvider from "../components/context/EventProvider";
+
 // 라우터 설정
 const eventsRouter = [
     {
@@ -49,15 +54,21 @@ const eventsRouter = [
         action: manipulateAction,
     },
 ];
+
 const homeRouter = [
     {
         index: true,
-        element: <WelcomePage />
-    }, // 웰컴페이지 (로그인화면 or 로그인 완료이후 화면)
+        element: <WelcomePage />,
+        action: loginAction,
+    }, // 웰컴 페이지 (로그인화면 or 로그인완료화면)
     {
-        path: 'sign-up',
-        element: <SignUpPage />
+        path: "sign-up",
+        element: <SignUpPage />,
     }, // 회원가입 페이지
+    {
+        path: "logout",
+        action: logoutAction,
+    },
 ];
 
 export const router = createBrowserRouter([
@@ -65,15 +76,23 @@ export const router = createBrowserRouter([
         path: "/",
         element: <RootLayout />,
         errorElement: <ErrorPage />,
+        loader: userDataLoader,
+        id: "user-data",
         children: [
-            { 
-                path: "/", 
+            {
+                path: "/",
                 element: <Home />,
-                children: homeRouter },
+                children: homeRouter,
+            },
             {
                 path: "events",
-                element: <EventLayout />,
+                element: (
+                    <EventProvider>
+                        <EventLayout />
+                    </EventProvider>
+                ),
                 children: eventsRouter,
+                loader: authCheckLoader,
             },
         ],
     },
